@@ -1,36 +1,36 @@
-defmodule Hedwig.Message do
+defmodule Hedwig.Reaction do
   @moduledoc """
-  Hedwig Message
+  Hedwig Reaction
   """
 
   @type matches   :: list | map
+  @type name      :: binary
   @type private   :: map
   @type ref       :: reference
   @type robot     :: pid
   @type room      :: binary
-  @type text      :: binary
   @type timestamp :: binary
   @type type      :: binary
   @type user      :: Hedwig.User.t
 
   @type t :: %__MODULE__{
     matches:   matches,
+    name:      name,
     private:   private,
     ref:       ref,
     robot:     robot,
     room:      room,
-    text:      text,
     timestamp: timestamp,
     type:      type,
     user:      user
   }
 
   defstruct matches:   nil,
+            name:      nil,
             private:   %{},
             ref:       nil,
             robot:     nil,
             room:      nil,
-            text:      nil,
             timestamp: nil,
             type:      nil,
             user:      %Hedwig.User{}

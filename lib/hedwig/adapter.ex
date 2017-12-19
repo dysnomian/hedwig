@@ -19,12 +19,48 @@ defmodule Hedwig.Adapter do
         GenServer.cast(pid, {:send, msg})
       end
 
+      def send_ephemeral(pid, %Hedwig.Message{} = msg) do
+        GenServer.cast(pid, {:send_ephemeral, msg})
+      end
+
+      def send_dm(pid, %Hedwig.Message{} = msg) do
+        GenServer.cast(pid, {:send_dm, msg})
+      end
+
       def reply(pid, %Hedwig.Message{} = msg) do
         GenServer.cast(pid, {:reply, msg})
       end
 
+      def direct_reply(pid, %Hedwig.Message{} = msg) do
+        GenServer.cast(pid, {:dm_reply, msg})
+      end
+
+      def threaded_reply(pid, %Hedwig.Message{} = msg) do
+        GenServer.cast(pid, {:dm_reply, msg})
+      end
+
       def emote(pid, %Hedwig.Message{} = msg) do
         GenServer.cast(pid, {:emote, msg})
+      end
+
+      def react(pid, %Hedwig.Reaction{} = reaction) do
+        GenServer.cast(pid, {:react, reaction})
+      end
+
+      def set_topic(pid, %{channel: channel, topic: topic} = msg) do
+        GenServer.cast(pid, {:set_topic, msg})
+      end
+
+      def set_status(pid, %{user: user, text: text, emoji: emoji} = msg) do
+        GenServer.cast(pid, {:set_status, msg})
+      end
+
+      # TODO: Joining rooms
+      def join(pid, room) do
+      end
+
+      # TODO: Exiting rooms
+      def leave(pid, room) do
       end
 
       @doc false
@@ -49,7 +85,12 @@ defmodule Hedwig.Adapter do
         :ok
       end
 
-      defoverridable [__before_compile__: 1, send: 2, reply: 2, emote: 2]
+      defoverridable [__before_compile__: 1,
+      send: 2, send_dm: 2, send_ephemeral: 2,
+      reply: 2, direct_reply: 2, threaded_reply: 2,
+      emote: 2, react: 2,
+      set_topic: 2, set_status: 2,
+      join: 2, leave: 2]
     end
   end
 
@@ -62,8 +103,18 @@ defmodule Hedwig.Adapter do
   @type state :: term
   @type opts  :: any
   @type msg   :: Hedwig.Message.t
+  @type room  :: binary
 
   @callback send(pid, msg) :: term
+  @callback send_dm(pid, msg) :: term
+  @callback send_ephemeral(pid, msg) :: term
   @callback reply(pid, msg) :: term
+  @callback direct_reply(pid, msg) :: term
+  @callback threaded_reply(pid, msg) :: term
   @callback emote(pid, msg) :: term
+  @callback react(pid, msg) :: term
+  @callback set_status(pid, msg) :: term
+  @callback set_topic(pid, msg) :: term
+  @callback join(pid, room) :: term
+  @callback leave(pid, room) :: term
 end

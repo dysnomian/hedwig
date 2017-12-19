@@ -28,6 +28,11 @@ defmodule Hedwig.Adapters.Test do
     {:noreply, state}
   end
 
+  def handle_cast({:react, %{user: user, room: room, timestamp: ts, name: name} = reaction}, %{conn: conn} = state) do
+    Kernel.send(conn, {:reply, %Hedwig.Message{user: user, text: "[#{ts}] #{user}: +:#{name}:"}})
+    {:noreply, state}
+  end
+
   def handle_info({:message, msg}, %{robot: robot} = state) do
     msg = %Hedwig.Message{robot: robot, text: msg.text, user: msg.user}
     Hedwig.Robot.handle_in(robot, msg)

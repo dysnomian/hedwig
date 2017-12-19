@@ -1,12 +1,8 @@
-defmodule Hedwig.Message do
+defmodule Hedwig.Event do
   @moduledoc """
-  Hedwig Message
+  Hedwig Event
   """
 
-  @type matches   :: list | map
-  @type private   :: map
-  @type ref       :: reference
-  @type robot     :: pid
   @type room      :: binary
   @type text      :: binary
   @type timestamp :: binary
@@ -14,10 +10,6 @@ defmodule Hedwig.Message do
   @type user      :: Hedwig.User.t
 
   @type t :: %__MODULE__{
-    matches:   matches,
-    private:   private,
-    ref:       ref,
-    robot:     robot,
     room:      room,
     text:      text,
     timestamp: timestamp,
@@ -25,11 +17,7 @@ defmodule Hedwig.Message do
     user:      user
   }
 
-  defstruct matches:   nil,
-            private:   %{},
-            ref:       nil,
-            robot:     nil,
-            room:      nil,
+  defstruct room:      nil,
             text:      nil,
             timestamp: nil,
             type:      nil,

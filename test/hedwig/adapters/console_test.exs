@@ -63,6 +63,24 @@ defmodule Hedwig.Adapters.ConsoleTest do
     end
   end
 
+  test "react/2" do
+    capture_io fn ->
+      {:ok, adapter} = Hedwig.Adapter.start_link(Console, name: "hedwig", user: "testuser")
+
+      handle_connect()
+      # replace the adapter's connection pid to the test process
+      replace_connection_pid(adapter)
+
+      orig_msg = %{text: "Hi!", user: "testuser", timestamp: "1234567890.123456", room: "C1234567890"}
+      reaction = %Hedwig.Reaction{name: "wave", user: "testuser", timestamp: "1234567890.123456", room: "C1234567890"}
+
+      Console.react(adapter, reaction)
+
+      expected = %{text: "[1234567890.123456] testuser: +:wave:", user: "testuser"}
+      assert_receive {:reply, expected}
+    end
+  end
+
   defp handle_connect do
     receive do
       {:"$gen_call", from, :handle_connect} ->
